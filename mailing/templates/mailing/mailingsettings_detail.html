@@ -1,0 +1,82 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="col-12">
+    <div class="row">
+        <div class="col -6">
+
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    <div class="title md-5">
+                        <h4>Характеристики рассылки</h4>
+                    </div>
+                    <table class="table table-striped">
+                        <tr>
+                            <td class="w-25">Владелец/Отправитель:</td>
+                            <td>Не указан</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Тема письма:</td>
+                            <td>{{ object.topic_mail }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Письмо:</td>
+                            <td>{{ object.body_mail }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Статус рассылки:</td>
+                            <td>{{ object.status }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Периодичность рассылки:</td>
+                            <td>{{ object.period }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Время:</td>
+                            <td>{{ object.time }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Получатели:</td>
+
+                            <td>
+                                {% for client_item in object.clients.all %}
+                                {{ client_item.email }}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-4 box-shadow">
+                <div class="card-body">
+                    <div class="title md-5">
+                        <h4>Логи рассылки</h4>
+                    </div>
+                    <table class="table table-striped">
+                        {% for log_item in object.logs_set.all %}
+                        <tr>
+                            <td class="w-25">Дата и время последней попытки:</td>
+                            <td>{{ log_item.last_attempt_send }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Статус посытки:</td>
+                            <td>{{ log_item.status_send }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25">Ответ сервера:</td>
+                            <td>{{ log_item.last_attempt_response }}</td>
+                        </tr>
+
+
+                        {% endfor %}
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
