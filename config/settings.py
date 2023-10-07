@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     'client',
     'mailing',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,11 @@ DATABASES = {
         'NAME': 'project7',
         'USER': 'postgres',
         'PASSWORD': '12345',
+        #'HOST': '172.28.209.205',
+        #'PORT': '5432',
+        # 'HOST': '127.0.0.1',
+        #'HOST': '172.28.208.1',
+        #'PORT': '5432',
     }
 }
 
@@ -120,3 +126,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+
+EMAIL_HOST_USER = os.getenv('YA_EMAIL')
+EMAIL_HOST_PASSWORD = os.getenv('YA_PASSWORD')
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+
+CRONJOBS = [
+    ('*/5 * * * *', 'mailing.management.commands'),
+]
+
+# CRONJOBS = [
+#    ('*/1 * * * *', 'mailing.cron.send_mail_task'),
+# ]
+
+# DATE_INPUT_FORMATS = ['%d.%m.%Y %H:%M:%S']
+# USE_L10N = False
