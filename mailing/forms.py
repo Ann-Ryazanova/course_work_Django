@@ -1,4 +1,6 @@
 from django import forms
+from django.conf import settings
+from django.forms import DateField, DateTimeField
 
 from mailing.models import MailingSettings
 
@@ -15,4 +17,4 @@ class MailingSettingsForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = MailingSettings
         fields = ('topic_mail', 'body_mail', 'clients',
-                  'period', 'time',)
+                  'period', 'time', 'day', 'status',)
