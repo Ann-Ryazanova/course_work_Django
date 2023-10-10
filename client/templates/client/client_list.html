@@ -10,6 +10,7 @@
     <h1 class="display-4">База клиентов</h1>
 </div>
 
+
 <div class="container">
     <div class="row text-center">
         <table class="table">
@@ -24,6 +25,7 @@
             </thead>
             <tbody>
             {% for object in object_list %}
+            {% if object.user == user %}
             <tr>
                 <th scope="row">__</th>
 
@@ -52,11 +54,10 @@
                        class="btn btn-sm btn-outline-danger btn-lg">Удалить</a>
                 </td>
             </tr>
+            {% endif %}
             {% endfor %}
             </tbody>
         </table>
-
-
     </div>
 </div>
 
