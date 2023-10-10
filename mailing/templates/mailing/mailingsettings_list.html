@@ -1,19 +1,45 @@
 {% extends 'mailing/base.html' %}
+{% load auth_extras %}
 {% block content %}
+
+
 <div class="col-12 mb-2">
-        <a class="btn btn-outline-primary" href="{% url 'mailing:create_mailing' %}">
+    {% if user.is_authenticated %}
+    <a class="btn btn-outline-primary" href="{% url 'mailing:create_mailing' %}">
         Добавить рассылку
     </a>
+    {% endif %}
 </div>
 
 <div class="pricing-header px-3 py-1 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4">Сервис рассылок</h1>
-    <h5 class="display-6">Перед началом создания рассылки, создайте базу клиентов, и затем преступайте к созданию своих рассылок</h5>
+    <h6 class="display-6">
+        Удобный сервис для создания рассылок!
+        Создайте базу клиентов для рассылки.
+        Создайте свою рассылку, и не забудьте указать статус рассылки: запущена!
+        И Ваши клиенты будут получать рассылку ежедневно, еженедельно или ежемесячно!
+    </h6>
+</div>
+
+{% if not user.is_authenticated %}
+ <div class="display-4"><h3>Статистика всех рассылок на сайте:</h3></div>
+
+<p>Количество рассылок: {{ object_list|length }}</p>
+<p>Количество активных рассылок: {{ count_active_mailing }}</p>
+<p>Количество клиентов для рассылок: {{ clients_count }}</p>
+{% endif %}
+
+<div class="text-center px-3 py-4">
+    <h5>Читайте наш блог:</h5>
+    {% for object in blog_list|slice:":3" %}
+    <a href="{% url 'blog:view' object.pk %}" class="card-link">{{ object.title }}</a>
+    {% endfor %}
 </div>
 
 <div class="container">
     <div class="row text-center">
         {% for object in object_list %}
+        {% if object.user == user or user.is_superuser == True or user|has_group:"manager" %}
         <div class="col-3">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
@@ -28,11 +54,11 @@
                           role="button">Подробнеe&raquo;</a></p>
                     <p><a href="{% url 'mailing:update_mailing' object.pk %}" type="button" class="btn btn-success">Редактировать</a>
                     </p>
+                    {% endif %}
+                    {% if object.user == user or user.is_superuser == True %}
                     <p><a href="{% url 'mailing:delete_mailing' object.pk %}" type="button" class="btn btn-danger">Удалить</a>
-
                     </p>
-                </div>
-                <div class="card-footer text-muted">
+                    {% endif %}
                 </div>
             </div>
         </div>
