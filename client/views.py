@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -19,11 +18,23 @@ class ClientCreateView(CreateView):
     form_class = ClientForm
     success_url = reverse_lazy('client:list')
 
+    def form_valid(self, form):
+        new_user = form.save()
+        new_user.save()
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 class ClientUpdateView(UpdateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('client:list')
+
+    def form_valid(self, form):
+        new_user = form.save()
+        new_user.save()
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class ClientDeleteView(DeleteView):
