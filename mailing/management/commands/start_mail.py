@@ -10,12 +10,11 @@ from mailing.services import install_next_date
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-
         for mail in MailingSettings.objects.filter(status=MailingSettings.STATUS_STARTED):
             email_list = [x.email for x in mail.clients.all()]
             time_now = datetime.now()
 
-            if mail.day == date.today() and mail.time >= time_now.time():
+            if mail.day == date.today() and mail.time <= time_now.time():
                 try:
                     result = send_mail(
                         subject=mail.topic_mail,
