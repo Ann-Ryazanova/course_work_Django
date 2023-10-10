@@ -2,9 +2,10 @@ from datetime import datetime
 
 from django.db import models
 
-from client.models import Client, NULLABLE
-from django.db.models import TextChoices
-from django.utils import timezone
+from users.models import User
+from client.models import Client
+
+NULLABLE = {'blank': True, 'null': True}
 
 
 class MailingSettings(models.Model):
@@ -38,10 +39,7 @@ class MailingSettings(models.Model):
 
     clients = models.ManyToManyField(Client, verbose_name="Получатель/Получатели")
 
-    # свзь по юзеру
-    # models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
-    # verbose_name='отправитель')
-    # owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='отправитель')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
         return (f'{self.period} {self.status} {self.time},'
@@ -52,15 +50,16 @@ class MailingSettings(models.Model):
         verbose_name = 'письмо'
         verbose_name_plural = 'письма'
 
+        permissions = [
+            ('set_status', 'Can change mailing status')
+        ]
+
 
 class Logs(models.Model):
     last_attempt_send = models.DateTimeField(default=None, verbose_name="дата и время последней попытки")
     status_send = models.CharField(max_length=150, verbose_name='Статус попытки')
-    # Не понимаю как задать пользователя, которому отправлялось письмо
     mailing = models.ForeignKey('MailingSettings', on_delete=models.CASCADE,
                                 verbose_name='Рассылка,которая отправлялась')
-    # client = models.ForeignKey('Client', on_delete=models.CASCADE, verbose_name='Получатель рассылки')
-
     last_attempt_response = models.CharField(max_length=150, **NULLABLE, verbose_name='ответ почтового сервера')
 
     def __str__(self):
