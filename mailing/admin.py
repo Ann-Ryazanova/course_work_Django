@@ -10,4 +10,6 @@ class MailingSettingsAdmin(admin.ModelAdmin):
     list_filter = ('status',)
 
 
-admin.site.register(Logs)
+@admin.register(Logs)
+class LogsAdmin(admin.ModelAdmin):
+    list_display = ('mailing', 'status_send', 'last_attempt_send',)
